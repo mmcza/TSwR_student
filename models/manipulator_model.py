@@ -15,6 +15,9 @@ class ManiuplatorModel:
         self.m3 = 0.0
         self.r3 = 0.01
         self.I_3 = 2. / 5 * self.m3 * self.r3 ** 2
+        self.alpha = self.m1 * (self.l1/2) ** 2 + self.I_1 + self.m2*(self.l1**2+(self.l2/2)**2) + self.I_2 + self.m3*(self.l1**2+self.l2**2) + self.I_3
+        self.beta = self.m2 * self.l1 * self.l2/2 + self.m3 * self.l1 * self.l2
+        self.gamma = self.m2*(self.l2/2)**2 + self.I_2 + self.m2 * self.l2**2 + self.I_3
 
     def M(self, x):
         """
@@ -22,7 +25,8 @@ class ManiuplatorModel:
         (2DoF planar manipulator with the object at the tip)
         """
         q1, q2, q1_dot, q2_dot = x
-        return NotImplementedError()
+
+        return np.array([[self.alpha+2*self.beta*np.cos(q2), self.gamma+self.beta*np.cos(q2)], [self.gamma+self.beta*np.cos(q2), self.gamma]])
 
     def C(self, x):
         """
@@ -30,4 +34,4 @@ class ManiuplatorModel:
         in the exercise (2DoF planar manipulator with the object at the tip)
         """
         q1, q2, q1_dot, q2_dot = x
-        return NotImplementedError()
+        return np.array([[-self.beta*np.sin(q2)*q2_dot, -self.beta*np.sin(q2)*(q1_dot+q2_dot)], [self.beta*np.sin(2)*q1_dot, 0]])
