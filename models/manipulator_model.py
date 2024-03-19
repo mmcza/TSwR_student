@@ -3,21 +3,24 @@ import numpy as np
 
 class ManiuplatorModel:
     def __init__(self, Tp):
+        # ustawic na podstawie urdf
         self.Tp = Tp
         self.l1 = 0.5
-        self.r1 = 0.01
-        self.m1 = 1.
-        self.l2 = 0.5
-        self.r2 = 0.01
-        self.m2 = 1.
+        self.r1 = 0.04
+        self.m1 = 3.
+        self.l2 = 0.4
+        self.r2 = 0.04
+        self.m2 = 2.4
         self.I_1 = 1 / 12 * self.m1 * (3 * self.r1 ** 2 + self.l1 ** 2)
         self.I_2 = 1 / 12 * self.m2 * (3 * self.r2 ** 2 + self.l2 ** 2)
-        self.m3 = 0.0
-        self.r3 = 0.01
+        self.m3 = 0.1
+        self.r3 = 0.05
         self.I_3 = 2. / 5 * self.m3 * self.r3 ** 2
         self.alpha = self.m1 * (self.l1/2) ** 2 + self.I_1 + self.m2*(self.l1**2+(self.l2/2)**2) + self.I_2 + self.m3*(self.l1**2+self.l2**2) + self.I_3
         self.beta = self.m2 * self.l1 * self.l2/2 + self.m3 * self.l1 * self.l2
         self.gamma = self.m2*(self.l2/2)**2 + self.I_2 + self.m2 * self.l2**2 + self.I_3
+        self.Kp = np.array([[10, 0], [0, 5]])
+        self.Kd = np.array([[1, 0], [0, 10]])
 
     def M(self, x):
         """
@@ -34,4 +37,4 @@ class ManiuplatorModel:
         in the exercise (2DoF planar manipulator with the object at the tip)
         """
         q1, q2, q1_dot, q2_dot = x
-        return np.array([[-self.beta*np.sin(q2)*q2_dot, -self.beta*np.sin(q2)*(q1_dot+q2_dot)], [self.beta*np.sin(2)*q1_dot, 0]])
+        return np.array([[-self.beta*np.sin(q2)*q2_dot, -self.beta*np.sin(q2)*(q1_dot+q2_dot)], [self.beta*np.sin(q2)*q1_dot, 0]])
