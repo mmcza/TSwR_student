@@ -12,4 +12,12 @@ class FeedbackLinearizationController(Controller):
         Please implement the feedback linearization using self.model (which you have to implement also),
         robot state x and desired control v.
         """
-        return NotImplementedError()
+        inverted_M = np.linalg.inv(self.model.M(x))
+        v = -self.model.C(x) @ inverted_M @ x[2:] + np.eye(2) @ inverted_M @ np.ones((2, 1))
+
+        # zeros = np.zeros((2, 2), dtype=np.float32)
+        # A = np.concatenate([np.concatenate([zeros, np.eye(2)], 1), np.concatenate([zeros, -invM @ self.C(x)], 1)], 0)
+        # b = np.concatenate([zeros, invM], 0)
+        # return A @ x[:, np.newaxis] + b @ u
+
+        return v
