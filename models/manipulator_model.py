@@ -18,7 +18,8 @@ class ManiuplatorModel:
         self.I_3 = 2. / 5 * self.m3 * self.r3 ** 2
         self.alpha = self.m1 * (self.l1/2) ** 2 + self.I_1 + self.m2*(self.l1**2+(self.l2/2)**2) + self.I_2 + self.m3*(self.l1**2+self.l2**2) + self.I_3
         self.beta = self.m2 * self.l1 * self.l2/2 + self.m3 * self.l1 * self.l2
-        self.gamma = self.m2*(self.l2/2)**2 + self.I_2 + self.m2 * self.l2**2 + self.I_3
+        self.gamma = self.m2*(self.l2/2)**2 + self.I_2 + self.m3 * self.l2**2 + self.I_3
+
         self.Kp = np.array([[10, 0], [0, 5]])
         self.Kd = np.array([[1, 0], [0, 10]])
 
