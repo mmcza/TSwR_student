@@ -21,7 +21,7 @@ class ManiuplatorModel:
         self.gamma = self.m2*(self.l2/2)**2 + self.I_2 + self.m3 * self.l2**2 + self.I_3
 
         self.Kp = np.array([[15, 0], [0, 15]])
-        self.Kd = np.array([[30, 0], [0, 10]])
+        self.Kd = np.array([[10, 0], [0, 10]])
 
     def M(self, x):
         """
