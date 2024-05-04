@@ -17,7 +17,7 @@ class MMAController(Controller):
 
         # self.models = [None, None, None]
         self.i = 0
-        self.u = [0, 0]
+        self.u = np.array([0, 0])
         self.prev_x = np.array([0, 0, 0, 0])
 
     def choose_model(self, x):
@@ -31,10 +31,19 @@ class MMAController(Controller):
             A = np.concatenate([np.concatenate([zeros, np.eye(2)], 1), np.concatenate([zeros, -invM @ C], 1)],0)
             b = np.concatenate([zeros, invM], 0)
             x_dot = A @ self.prev_x[:, np.newaxis] + b @ self.u
-            calculated_x = self.prev_x + x_dot * self.Tp
+            # print("Shape of A:", A.shape)
+            # print("Shape of b:", b.shape)
+            # print("Shape of self.prev_x:", self.prev_x.shape)
+            # print("Shape of self.u:", self.u.shape)
+            # print(x_dot.T.shape)
+            calculated_x = self.prev_x + x_dot.T * self.Tp
             #errors.append(np.mean(np.abs(calculated_x - x)))
             #errors.append(np.sum(np.abs(calculated_x - x)))
-            errors.append(np.linalg.norm(calculated_x - x))
+            # print(self.prev_x)
+            # print(x_dot)
+            # print(calculated_x)
+            # print(x)
+            errors.append(np.linalg.norm(calculated_x[0] - x))
             #errors.append(np.sum((calculated_x - x) ** 2))
 
         self.i = np.argmin(errors)
@@ -51,7 +60,7 @@ class MMAController(Controller):
         v = q_r_ddot - self.models[self.i].Kp @ (x[:2] - q_r) - self.models[self.i].Kd @ (x[2:] - q_r_dot)
         M = self.models[self.i].M(x)
         C = self.models[self.i].C(x)
-        self.u = M @ v[:, np.newaxis] + C @ q_dot[:, np.newaxis]
+        self.u = np.array(M @ v[:, np.newaxis] + C @ q_dot[:, np.newaxis])
         #self.choose_model(x)
         self.prev_x = x
         return self.u
